@@ -3,9 +3,11 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]  # Также запускается на pull request
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
@@ -16,6 +18,9 @@ jobs:
         with:
           go-version: '1.21'
 
+      - name: Install dependencies
+        run: go mod tidy
+
       - name: Build the app
         run: go build -v ./...
 
@@ -23,9 +28,14 @@ jobs:
         run: go test -v ./...
 
   deploy:
-    needs: build
+    name: Deploy to Production
     runs-on: ubuntu-latest
+    needs: build-and-test
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: Deploy step
-        run: echo "Deploy stage goes here (Docker push, SSH deploy, etc.)"
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      # Вставь свой деплой: Docker push, SCP, rsync, Render CLI и т.д.
+      - name: Deploy step (example)
+        run: echo "Deploying to production server..."
