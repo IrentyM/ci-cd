@@ -1,14 +1,8 @@
-name: CI/CD Pipeline
-
-on:
-  push:
-    branches: [main]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Go
@@ -16,17 +10,8 @@ jobs:
         with:
           go-version: '1.21'
 
-      - name: Build the app
-        run: go build -v ./...
+      - name: Install dependencies (optional)
+        run: go mod tidy
 
       - name: Run tests
         run: go test -v ./...
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Deploy step
-        run: echo "Deploy stage goes here (Docker push, SSH deploy, etc.)"
-        # Здесь можешь подключить деплой на VPS, Render, Heroku и т.п.
