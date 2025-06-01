@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]  # Также запускается на pull request
+    branches: [main]
 
 jobs:
   build-and-test:
